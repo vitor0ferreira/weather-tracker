@@ -10,8 +10,10 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 2rem;
   min-height: 100vh;
   min-width: 100vw;
+  background: linear-gradient(0deg, rgba(2,45,205,1) 0%, rgba(85,124,255,1) 39%, rgba(0,213,255,1) 100%);
 }
 
 html,
