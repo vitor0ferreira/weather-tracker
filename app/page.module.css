@@ -31,7 +31,7 @@
   left: 1px;
 }
 
-.form{
+.div{
   display: flex;
   gap: 0.2rem;
 }
@@ -41,9 +41,17 @@
   aspect-ratio: 1/1;
   height: auto;
   width: 24rem;
+  padding: 0.8rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
   background: rgba( 255, 255, 255, 0.8 );
   box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
   backdrop-filter: blur( 17px );
   -webkit-backdrop-filter: blur( 17px );
   border-radius: 10px;
+  color: black;
+  font-size: 2rem;
+  font-weight: 600;
 }

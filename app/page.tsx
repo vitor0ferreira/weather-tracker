@@ -7,20 +7,24 @@ import { Children, useState } from 'react'
 
 export default function Home() {
 
-  const [currentCity, setCurrentCity] = useState<string>();
+  const [searchCity, setSearchCity] = useState<string>('');
+  const [currentCity, setCurrentCity] = useState<string>('');
+  const cardWeather:any = document.getElementById('weather_card');
 
   const handleChange = (e:any) => {
-    setCurrentCity(e.target.value);
-    console.log(currentCity);
+    setSearchCity(e.target.value);
+    console.log(searchCity);
   };
 
-  const formSubmit = () => {
-    console.log(currentCity);
+  const citySubmit = () => {
+    cardWeather.innerText = searchCity;
+    console.log(searchCity);
   };
+
   
   return (
     <main>
-      <form className={styles.form}>
+      <div className={styles.div}>
         <input 
           type='search'
           placeholder='Digite a cidade'
@@ -28,11 +32,11 @@ export default function Home() {
           className={styles.search_bar}
           onChange={handleChange}
         />
-        <button className={styles.submit} onClick={formSubmit}>
+        <button className={styles.submit} onClick={citySubmit}>
           PROCURAR
         </button>
-      </form>
-      <section className={styles.weather_section}>
+      </div>
+      <section className={styles.weather_section} id='weather_card'>
         
       </section>
     </main>
