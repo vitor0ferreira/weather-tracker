@@ -15,9 +15,10 @@ export default function Home() {
   const [searchCity, setSearchCity] = useState<string>('New York');
   const [cityCoordinates, setCityCoordinates] = useState<Cidade>();
   const [isSearching, setIsSearching] = useState<boolean>(true);
+  const [isReady, setIsReady] = useState<boolean>(false);
   const [weatherData, setWeatherData] = useState<any>([]);
   const geoApiURL:string = `http://api.openweathermap.org/geo/1.0/direct?q=${searchCity}&limit=5&appid=9db20493ccc761d551a7b7e55deaa7c2`;
-  const weatherApiURL:string = `https://api.openweathermap.org/data/3.0/onecall?lat=${cityCoordinates?.latitude.toFixed(1)}&lon=${cityCoordinates?.longitude.toFixed(1)}&exclude=daily&appid=9db20493ccc761d551a7b7e55deaa7c2`
+  const weatherApiURL:string = `https://api.openweathermap.org/data/3.0/onecall?lat=${cityCoordinates?.latitude.toFixed(1)}&lon=${cityCoordinates?.longitude.toFixed(1)}&exclude=daily&units=metric&appid=9db20493ccc761d551a7b7e55deaa7c2`
 
   const citySubmit = () => {
     console.log(searchCity);
@@ -56,6 +57,10 @@ export default function Home() {
     
   },[isSearching]);
 
+  const handleClick = () => {
+    setIsSearching(true);
+  }
+
   return (
     <main>
       <div className={styles.div}>
@@ -66,13 +71,13 @@ export default function Home() {
           className={styles.search_bar}
           onChange={(e)=>{setSearchCity(e.target.value)}}
         />
-        <button className={styles.submit} onClick={()=>{setIsSearching(true)}}>
+        <button className={styles.submit} onClick={handleClick}>
           PROCURAR
         </button>
       </div>
       <section className={styles.weather_section} id='weather_card'>
         {searchCity ? <div><BsFillGeoAltFill/> {searchCity}</div> : null}
-        {!isSearching ? <div>Temp: {weatherData.current.temp} C° Umidade: {weatherData.current.umity}</div> : null}
+        {!isSearching ? <div>Temp: {weatherData.current.temp} C° Umidade: {weatherData.current.humidity}%</div> : null}
       </section>
     </main>
   )
