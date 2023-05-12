@@ -15,14 +15,15 @@ export default function Home() {
   const [searchCity, setSearchCity] = useState<string>('New York');
   const [cityCoordinates, setCityCoordinates] = useState<Cidade>();
   const [isSearching, setIsSearching] = useState<boolean>(true);
+  const [weatherData, setWeatherData] = useState<object>([]);
   const geoApiURL:string = `http://api.openweathermap.org/geo/1.0/direct?q=${searchCity}&limit=5&appid=9db20493ccc761d551a7b7e55deaa7c2`;
-  const weatherApiURL:string = `https://api.openweathermap.org/data/3.0/onecall?lat=${cityCoordinates?.latitude}&lon=${cityCoordinates?.longitude}&appid=9db20493ccc761d551a7b7e55deaa7c2`
+  const weatherApiURL:string = `https://api.openweathermap.org/data/3.0/onecall?lat=${cityCoordinates?.latitude.toFixed(1)}&lon=${cityCoordinates?.longitude.toFixed(1)}&exclude=daily&appid=9db20493ccc761d551a7b7e55deaa7c2`
 
   const citySubmit = () => {
     console.log(searchCity);
   };
 
-  const getCoordinates = async () => {
+  async function getCoordinates() {
       
     const geoLocationCall = await fetch(geoApiURL);
     const locationData = await geoLocationCall.json();
@@ -35,16 +36,25 @@ export default function Home() {
     setCityCoordinates(cidadeEncontrada);
   };
 
+  async function getWeather() {
+    
+    const cityWeatherCall = await fetch(weatherApiURL)
+      .then((res)=>res.json())
+      .then((res)=>setWeatherData(res));
+    
+    setIsSearching(false);
+  };
+
 
   useEffect(()=>{
 
     if(isSearching){
       getCoordinates();
-    }
+      if(cityCoordinates)
+        getWeather();
+    };
     
   },[isSearching]);
-
-  console.log(cityCoordinates);
 
   return (
     <main>
@@ -56,12 +66,13 @@ export default function Home() {
           className={styles.search_bar}
           onChange={(e)=>{setSearchCity(e.target.value)}}
         />
-        <button className={styles.submit} onClick={citySubmit}>
+        <button className={styles.submit} onClick={()=>{setIsSearching(true)}}>
           PROCURAR
         </button>
       </div>
       <section className={styles.weather_section} id='weather_card'>
         {searchCity ? <div><BsFillGeoAltFill/> {searchCity}</div> : null}
+        {!isSearching ? <div>Temp: {weatherData.current.temp} C° Umidade: {weatherData.current.umity}</div> : null}
       </section>
     </main>
   )
