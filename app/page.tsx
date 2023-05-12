@@ -3,6 +3,7 @@
 import { BsFillGeoAltFill } from 'react-icons/bs'
 import styles from './page.module.css'
 import { Children, useEffect, useState } from 'react'
+import Card from './components/Card/Card';
 
 
 export default function Home() {
@@ -25,40 +26,43 @@ export default function Home() {
   };
 
   async function getCoordinates() {
-      
-    const geoLocationCall = await fetch(geoApiURL);
-    const locationData = await geoLocationCall.json();
-    
-    const cidadeEncontrada:Cidade = {
-      latitude: locationData[0].lat,
-      longitude: locationData[0].lon
-    };
 
-    setCityCoordinates(cidadeEncontrada);
+    const geoLocationCall = await fetch(geoApiURL)
+    const locationData = await geoLocationCall.json()
+      .then((res)=>{
+
+        const cidadeEncontrada:Cidade = {
+          latitude: res[0].lat,
+          longitude: res[0].lon
+        };
+        setCityCoordinates(cidadeEncontrada);
+        getWeather();
+      })
   };
 
   async function getWeather() {
     
     const cityWeatherCall = await fetch(weatherApiURL)
       .then((res)=>res.json())
-      .then((res)=>setWeatherData(res));
+      .then((data)=>{
+        setWeatherData(data);
+        setIsSearching(false);
+        setIsReady(true);
+      });
     
-    setIsSearching(false);
   };
 
 
   useEffect(()=>{
 
-    if(isSearching){
+    if(isSearching)
       getCoordinates();
-      if(cityCoordinates)
-        getWeather();
-    };
     
   },[isSearching]);
 
   const handleClick = () => {
     setIsSearching(true);
+    setIsReady(false);
   }
 
   return (
@@ -75,10 +79,10 @@ export default function Home() {
           PROCURAR
         </button>
       </div>
-      <section className={styles.weather_section} id='weather_card'>
-        {searchCity ? <div><BsFillGeoAltFill/> {searchCity}</div> : null}
-        {!isSearching ? <div>Temp: {weatherData.current.temp} C° Umidade: {weatherData.current.humidity}%</div> : null}
-      </section>
+      { isReady ?
+        <Card city={searchCity} temperature={weatherData.current.temp} humidity={weatherData.current.humidity} />
+        : null
+      }
     </main>
   )
 }
