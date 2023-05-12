@@ -15,7 +15,7 @@ export default function Home() {
   const [searchCity, setSearchCity] = useState<string>('New York');
   const [cityCoordinates, setCityCoordinates] = useState<Cidade>();
   const [isSearching, setIsSearching] = useState<boolean>(true);
-  const [weatherData, setWeatherData] = useState<object>([]);
+  const [weatherData, setWeatherData] = useState<any>([]);
   const geoApiURL:string = `http://api.openweathermap.org/geo/1.0/direct?q=${searchCity}&limit=5&appid=9db20493ccc761d551a7b7e55deaa7c2`;
   const weatherApiURL:string = `https://api.openweathermap.org/data/3.0/onecall?lat=${cityCoordinates?.latitude.toFixed(1)}&lon=${cityCoordinates?.longitude.toFixed(1)}&exclude=daily&appid=9db20493ccc761d551a7b7e55deaa7c2`
 
