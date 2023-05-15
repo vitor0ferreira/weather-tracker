@@ -8,47 +8,45 @@ import Card from './components/Card/Card';
 
 export default function Home() {
 
-  interface Cidade {
-    latitude: number,
-    longitude: number
-  };
 
   const [searchCity, setSearchCity] = useState<string>('New York');
-  const [cityCoordinates, setCityCoordinates] = useState<Cidade>();
+  const encodeCity = encodeURI(searchCity);
+  const [cityCoordinates, setCityCoordinates] = useState<any>({latitude: 0, longitude: 0});
   const [isSearching, setIsSearching] = useState<boolean>(true);
   const [isReady, setIsReady] = useState<boolean>(false);
   const [weatherData, setWeatherData] = useState<any>([]);
-  const geoApiURL:string = `http://api.openweathermap.org/geo/1.0/direct?q=${searchCity}&limit=5&appid=9db20493ccc761d551a7b7e55deaa7c2`;
-  const weatherApiURL:string = `https://api.openweathermap.org/data/3.0/onecall?lat=${cityCoordinates?.latitude.toFixed(1)}&lon=${cityCoordinates?.longitude.toFixed(1)}&exclude=daily&units=metric&appid=9db20493ccc761d551a7b7e55deaa7c2`
-
-  const citySubmit = () => {
-    console.log(searchCity);
-  };
+  const geoApiURL:string = `http://api.openweathermap.org/geo/1.0/direct?q=${encodeCity}&limit=5&appid=9db20493ccc761d551a7b7e55deaa7c2`;
+  const weatherApiURL:string = `https://api.openweathermap.org/data/3.0/onecall?lat=${cityCoordinates.latitude.toFixed(3)}&lon=${cityCoordinates.longitude.toFixed(3)}&exclude=daily&units=metric&appid=9db20493ccc761d551a7b7e55deaa7c2`
 
   async function getCoordinates() {
+    try {
+      const geoLocationCall = await fetch(geoApiURL);
+      try {
+        const locationData = await geoLocationCall.json();
+        const { lat, lon} = locationData[0];
+        const cityFinded = {latitude: lat, longitude: lon};
 
-    const geoLocationCall = await fetch(geoApiURL)
-    const locationData = await geoLocationCall.json()
-      .then((res)=>{
-
-        const cidadeEncontrada:Cidade = {
-          latitude: res[0].lat,
-          longitude: res[0].lon
-        };
-        setCityCoordinates(cidadeEncontrada);
+        setCityCoordinates(cityFinded);
         getWeather();
-      })
+      } catch (error) {
+      alert(error);
+      }
+    } catch (error) {
+      alert(error);
+    }
   };
 
   async function getWeather() {
-    
-    const cityWeatherCall = await fetch(weatherApiURL)
-      .then((res)=>res.json())
-      .then((data)=>{
-        setWeatherData(data);
-        setIsSearching(false);
-        setIsReady(true);
-      });
+    try {
+      const cityWeatherCall = await fetch(weatherApiURL)
+      const cityWeather = await cityWeatherCall.json();
+      
+      setWeatherData(cityWeather);
+      setIsSearching(false);
+      setIsReady(true);
+    } catch (error) {
+      alert(error);
+    }
     
   };
 
@@ -80,7 +78,7 @@ export default function Home() {
         </button>
       </div>
       { isReady ?
-        <Card city={searchCity} temperature={weatherData.current.temp} humidity={weatherData.current.humidity} />
+        (<Card city={searchCity} weather={weatherData} />)
         : null
       }
     </main>

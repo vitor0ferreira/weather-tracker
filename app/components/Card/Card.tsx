@@ -4,9 +4,12 @@ export default function Card(props:any) {
 
     return(
         <StyledCard>
-            <h1>{props.city}</h1>
-            <span>Temperatura: {props.temperature}</span>
-            <span>Umidade: {props.humidity}</span>
+            {props &&
+                <>
+                    <h1>{props.city}</h1>
+                    <span>Temperatura: {props.weather.temp}</span>
+                    <span>Umidade: {props.humidity}</span>
+                </>}
         </StyledCard>
     )
 }
