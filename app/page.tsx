@@ -11,12 +11,12 @@ export default function Home() {
 
   const [searchCity, setSearchCity] = useState<string>('New York');
   const encodeCity = encodeURI(searchCity);
-  const [cityCoordinates, setCityCoordinates] = useState<any>({latitude: 0, longitude: 0});
+  const [cityCoordinates, setCityCoordinates] = useState<any>();
   const [isSearching, setIsSearching] = useState<boolean>(true);
   const [isReady, setIsReady] = useState<boolean>(false);
   const [weatherData, setWeatherData] = useState<any>([]);
   const geoApiURL:string = `http://api.openweathermap.org/geo/1.0/direct?q=${encodeCity}&limit=5&appid=9db20493ccc761d551a7b7e55deaa7c2`;
-  const weatherApiURL:string = `https://api.openweathermap.org/data/3.0/onecall?lat=${cityCoordinates.latitude.toFixed(3)}&lon=${cityCoordinates.longitude.toFixed(3)}&exclude=daily&units=metric&appid=9db20493ccc761d551a7b7e55deaa7c2`
+  const weatherApiURL:string = `https://api.openweathermap.org/data/3.0/onecall?lat=${cityCoordinates?.latitude}&lon=${cityCoordinates?.longitude}&exclude=daily&units=metric&appid=9db20493ccc761d551a7b7e55deaa7c2`
 
   async function getCoordinates() {
     try {
@@ -27,7 +27,11 @@ export default function Home() {
         const cityFinded = {latitude: lat, longitude: lon};
 
         setCityCoordinates(cityFinded);
-        getWeather();
+        if(cityFinded.latitude && cityFinded.longitude)
+        {
+          console.log(cityFinded)
+          console.log(cityCoordinates)
+        }
       } catch (error) {
       alert(error);
       }
