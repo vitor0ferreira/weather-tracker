@@ -24,6 +24,7 @@ export default function Home() {
     temperature: 0,
     humidity: 0
   }
+  const [newCityData, setNewCityData] = useState<City>()
 
   
   async function GetWeatherData (){
@@ -51,7 +52,9 @@ export default function Home() {
         console.log(response)
         cityData.temperature = response.current.temp
         cityData.humidity = response.current.humidity
-        setIsDataReady(true);
+        setIsDataReady(true)
+        setNewCityData(cityData)
+        console.table(newCityData)
       })
     }
   }
@@ -69,7 +72,7 @@ export default function Home() {
           PROCURAR
         </button>
       </div>
-      {isDataReady && <Card city={isDataReady && cityData}/>}
+      {newCityData && <Card city={newCityData}/>}
     </main>
   )
 }
