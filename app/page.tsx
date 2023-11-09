@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import Card from './components/Card/Card';
 
 interface City {
-  name: string,
+  name: string | undefined | null,
   longitude: number,
   latitude: number,
   temperature: number,
@@ -14,29 +14,31 @@ interface City {
 }
 
 export default function Home() {
-  
-  const [cityInput, setCityInput] = useState<string>('New York')
-  const [isDataReady, setIsDataReady] = useState<boolean>(false)
-  const cityData:City = {
-    name: cityInput,
+
+  const [cityData, setCityData] = useState<City>({
+    name: 'New York',
     longitude: 0,
     latitude: 0,
     temperature: 0,
     humidity: 0
-  }
-  const [newCityData, setNewCityData] = useState<City>()
+  })
 
+  const searchedCity = document.querySelector('input')?.value
+  
+
+  function handleSearchClick (){
+      GetWeatherData();
+  }
   
   async function GetWeatherData (){
-    const geoApiURL:string = `http://api.openweathermap.org/geo/1.0/direct?q=${cityInput}&limit=5&appid=9db20493ccc761d551a7b7e55deaa7c2`;
+    const geoApiURL:string = `http://api.openweathermap.org/geo/1.0/direct?q=${cityData.name}&limit=5&appid=9db20493ccc761d551a7b7e55deaa7c2`;
     
     
     const fetchData = await fetch(geoApiURL)
-      .then((data)=>data.json())
-      .then((data)=> data = data[0])
+    const weatherData = await fetchData.json()
       .then((data)=>{
-        cityData.latitude = data.lat
-        cityData.longitude = data.lon
+        data = data[0]
+        setCityData({...cityData, latitude: data.lat, longitude: data.lon})   
       })
       .then(() => fetchWeather(cityData))
 
@@ -47,10 +49,7 @@ export default function Home() {
       await fetch(weatherApiURL)
       .then((response)=>response.json())
       .then((response)=>{
-        console.log(response)
-        cityData.temperature = response.current.temp
-        cityData.humidity = response.current.humidity
-        setIsDataReady(true)
+        setCityData({...cityData, temperature: response.current.temp, humidity: response.current.humidity})
         console.table(cityData)
       })
     }
@@ -64,14 +63,16 @@ export default function Home() {
           placeholder='Digite a cidade'
           required
           className={styles.search_bar}
+          id='searchInput'
         />
-        <button className={styles.submit} onClick={GetWeatherData}>
+        <button className={styles.submit} onClick={handleSearchClick}>
           PROCURAR
         </button>
       </div>
       <div className={styles.weather_section}>
         <h1>{cityData.name}</h1>
-        <section className={styles.weather_lines}>Temperature <p></p> </section>
+        <section className={styles.weather_lines}>Temperatura <p>{cityData.temperature}</p> </section>
+        <section className={styles.weather_lines}>Umidade <p>{cityData.humidity}</p> </section>
       </div>
     </main>
   )
