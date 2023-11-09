@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
-export default function Card(city:any) {
+export default function Card(props:any) {
 
     return(
             <StyledCard>
-                <h1>{city.name}</h1>
-                <span>Temperatura:{city.temperature}</span>
-                <span>Umidade:{city.humidity}</span>
+                <h1>{props.city}</h1>
+                <span>Temperatura:{props.temperature}</span>
+                <span>Umidade:{props.humidity}</span>
             </StyledCard>
     )
 }

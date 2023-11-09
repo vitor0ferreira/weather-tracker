@@ -35,10 +35,8 @@ export default function Home() {
       .then((data)=>data.json())
       .then((data)=> data = data[0])
       .then((data)=>{
-        console.log(data)
         cityData.latitude = data.lat
         cityData.longitude = data.lon
-        console.table(cityData)
       })
       .then(() => fetchWeather(cityData))
 
@@ -53,8 +51,7 @@ export default function Home() {
         cityData.temperature = response.current.temp
         cityData.humidity = response.current.humidity
         setIsDataReady(true)
-        setNewCityData(cityData)
-        console.table(newCityData)
+        console.table(cityData)
       })
     }
   }
@@ -72,7 +69,10 @@ export default function Home() {
           PROCURAR
         </button>
       </div>
-      {newCityData && <Card city={newCityData}/>}
+      <div className={styles.weather_section}>
+        <h1>{cityData.name}</h1>
+        <section className={styles.weather_lines}>Temperature <p></p> </section>
+      </div>
     </main>
   )
 }

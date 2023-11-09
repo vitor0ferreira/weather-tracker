@@ -48,7 +48,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background: rgba( 255, 255, 255, 0.8 );
+  background: rgba( 255, 255, 255, 0.95 );
   box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
   backdrop-filter: blur( 17px );
   -webkit-backdrop-filter: blur( 17px );
@@ -56,4 +56,14 @@
   color: black;
   font-size: 2rem;
   font-weight: 600;
+}
+
+.weather_lines{
+  width: 100%;
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-size: x-large;
 }
