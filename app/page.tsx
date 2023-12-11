@@ -57,7 +57,7 @@ export default function Home() {
 
   return (
     <main>
-      <div className={styles.div}>
+      <div >
         <input 
           type='search'
           placeholder='Digite a cidade'
@@ -65,14 +65,14 @@ export default function Home() {
           className={styles.search_bar}
           id='searchInput'
         />
-        <button className={styles.submit} onClick={handleSearchClick}>
+        <button onClick={handleSearchClick}>
           PROCURAR
         </button>
       </div>
-      <div className={styles.weather_section}>
+      <div >
         <h1>{cityData.name}</h1>
-        <section className={styles.weather_lines}>Temperatura <p>{cityData.temperature}</p> </section>
-        <section className={styles.weather_lines}>Umidade <p>{cityData.humidity}</p> </section>
+        <section >Temperatura <p>{cityData.temperature}</p> </section>
+        <section >Umidade <p>{cityData.humidity}</p> </section>
       </div>
     </main>
   )
