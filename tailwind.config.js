@@ -6,7 +6,11 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'weatherPixelArt': "url('../public/assets/backgrounds/pixel_art_background.gif')", 
+      }
+    },
   },
   plugins: [],
 }

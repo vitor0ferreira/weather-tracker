@@ -1,7 +1,6 @@
 'use client';
 
 import { BsFillGeoAltFill } from 'react-icons/bs'
-import styles from './page.module.css'
 import { useEffect, useState } from 'react'
 import Card from './components/Card/Card';
 
@@ -15,6 +14,7 @@ interface City {
 
 export default function Home() {
 
+  const [cards, setCards] = useState<any>([])
   const [cityData, setCityData] = useState<City>({
     name: 'New York',
     longitude: 0,
@@ -23,11 +23,15 @@ export default function Home() {
     humidity: 0
   })
 
-  const searchedCity = document.querySelector('input')?.value
-  
+  const [searchedCity, setSearchedCity] = useState('')
 
   function handleSearchClick (){
-      GetWeatherData();
+    if(cards.length == 10){
+      cards.shift();
+    }
+    if(searchedCity != ''){
+      setCards((prevCards:Array<string>)=> [...prevCards, searchedCity])
+    }
   }
   
   async function GetWeatherData (){
@@ -56,24 +60,25 @@ export default function Home() {
   }
 
   return (
-    <main>
-      <div >
+    <main className='bg-weatherPixelArt h-screen min-h-min w-full bg-center bg-cover flex flex-col items-center justify-center gap-6'>
+      <div className='bg-slate-700 rounded-sm flex gap-2 p-2 shadow-sm shadow-black'>
         <input 
           type='search'
           placeholder='Digite a cidade'
           required
-          className={styles.search_bar}
+          className='p-1 h-6 text-sm font-semibold focus:outline-none rounded-sm focus:placeholder:invisible'
+          onChange={(e)=> setSearchedCity(e.target.value)}
           id='searchInput'
         />
-        <button onClick={handleSearchClick}>
+        <button onClick={handleSearchClick} className='font-semibold text-white'>
           PROCURAR
         </button>
       </div>
-      <div >
-        <h1>{cityData.name}</h1>
-        <section >Temperatura <p>{cityData.temperature}</p> </section>
-        <section >Umidade <p>{cityData.humidity}</p> </section>
-      </div>
+      <section className='h-min w-screen gap-4 flex flex-wrap p-4 overflow-scroll no-scrollbar'>
+        {cards.map((searchedCity:string, index:number) => (
+          <Card key={index} index={index+1} cityData={searchedCity} />
+        ))}
+      </section>
     </main>
   )
 }
