@@ -83,7 +83,7 @@ export default function Home() {
       </div>
       <section className='h-min w-screen gap-4 flex flex-wrap p-4 overflow-scroll no-scrollbar'>
         {cards.map((searchedCity:string, index:number) => (
-          <Card key={index} index={index+1} city={searchedCity} />
+          <Card key={index} index={index} city={searchedCity} cardState={{cards, setCards}} />
         ))}
       </section>
     </main>
