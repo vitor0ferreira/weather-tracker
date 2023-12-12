@@ -13,17 +13,17 @@ interface City {
 }
 
 export default function Home() {
-
+  
+  const [searchedCity, setSearchedCity] = useState('')
   const [cards, setCards] = useState<any>([])
   const [cityData, setCityData] = useState<City>({
-    name: 'New York',
+    name: '',
     longitude: 0,
     latitude: 0,
     temperature: 0,
     humidity: 0
   })
 
-  const [searchedCity, setSearchedCity] = useState('')
 
   function handleSearchClick (){
     if(cards.length == 10){
@@ -31,18 +31,20 @@ export default function Home() {
     }
     if(searchedCity != ''){
       setCards((prevCards:Array<string>)=> [...prevCards, searchedCity])
+      GetWeatherData(searchedCity)
     }
   }
   
-  async function GetWeatherData (){
-    const geoApiURL:string = `http://api.openweathermap.org/geo/1.0/direct?q=${cityData.name}&limit=5&appid=9db20493ccc761d551a7b7e55deaa7c2`;
+  async function GetWeatherData (city:string){
+    const geoApiURL:string = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=9db20493ccc761d551a7b7e55deaa7c2`;
     
     
     const fetchData = await fetch(geoApiURL)
     const weatherData = await fetchData.json()
       .then((data)=>{
-        data = data[0]
-        setCityData({...cityData, latitude: data.lat, longitude: data.lon})   
+        setCityData({...cityData, name: searchedCity, latitude: data[0].lat, longitude: data[0].lon})
+        console.table(data)
+        console.table(cityData)
       })
       .then(() => fetchWeather(cityData))
 
@@ -54,7 +56,6 @@ export default function Home() {
       .then((response)=>response.json())
       .then((response)=>{
         setCityData({...cityData, temperature: response.current.temp, humidity: response.current.humidity})
-        console.table(cityData)
       })
     }
   }
@@ -76,7 +77,7 @@ export default function Home() {
       </div>
       <section className='h-min w-screen gap-4 flex flex-wrap p-4 overflow-scroll no-scrollbar'>
         {cards.map((searchedCity:string, index:number) => (
-          <Card key={index} index={index+1} cityData={searchedCity} />
+          <Card key={index} index={index+1} city={searchedCity} />
         ))}
       </section>
     </main>

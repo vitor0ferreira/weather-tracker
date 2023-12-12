@@ -9,6 +9,9 @@ module.exports = {
     extend: {
       backgroundImage: {
         'weatherPixelArt': "url('../public/assets/backgrounds/pixel_art_background.gif')", 
+      },
+      fontSize:{
+        'vsm': "0.5rem",
       }
     },
   },
