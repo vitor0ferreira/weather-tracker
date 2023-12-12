@@ -1,7 +1,7 @@
 'use client';
 
-import { BsFillGeoAltFill } from 'react-icons/bs'
-import { useEffect, useState } from 'react'
+import { FaSearch } from "react-icons/fa";
+import { useState } from 'react'
 import Card from './components/Card/Card';
 
 interface City {
@@ -31,7 +31,10 @@ export default function Home() {
     }
     if(searchedCity != ''){
       setCards((prevCards:Array<string>)=> [...prevCards, searchedCity])
-      GetWeatherData(searchedCity)
+      // GetWeatherData(searchedCity)
+    }
+    if(searchedCity.length < 3){
+      alert('Nome inválido ou não encontrado.')
     }
   }
   
@@ -62,18 +65,21 @@ export default function Home() {
 
   return (
     <main className='bg-weatherPixelArt h-screen min-h-min w-full bg-center bg-cover flex flex-col items-center justify-center gap-6'>
-      <div className='bg-slate-700 rounded-sm flex gap-2 p-2 shadow-sm shadow-black'>
-        <input 
-          type='search'
-          placeholder='Digite a cidade'
-          required
-          className='p-1 h-6 text-sm font-semibold focus:outline-none rounded-sm focus:placeholder:invisible'
-          onChange={(e)=> setSearchedCity(e.target.value)}
-          id='searchInput'
-        />
-        <button onClick={handleSearchClick} className='font-semibold text-white'>
-          PROCURAR
-        </button>
+      <div className='bg-slate-700 rounded-sm flex flex-col gap-2 p-2  shadow-sm shadow-black'>
+        <p className="text-white font-semibold text-center" >Pesquise o nome da cidade</p>
+        <div className="flex gap-2">
+          <input
+            type='search'
+            placeholder='Digite a cidade'
+            required
+            className='p-1 h-6 text-sm font-semibold focus:outline-none rounded-sm focus:placeholder:invisible'
+            onChange={(e)=> setSearchedCity(e.target.value)}
+            id='searchInput'
+          />
+          <button onClick={handleSearchClick} className='text-white'>
+            <FaSearch/>
+          </button>
+        </div>
       </div>
       <section className='h-min w-screen gap-4 flex flex-wrap p-4 overflow-scroll no-scrollbar'>
         {cards.map((searchedCity:string, index:number) => (
