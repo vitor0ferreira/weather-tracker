@@ -3,35 +3,33 @@
 import { FaSearch } from "react-icons/fa";
 import { useState } from 'react'
 import Card from './components/Card/Card';
+import LoadingSpinner from "./components/LoadingSpinner";
 
 interface City {
   name: string | undefined | null,
-  longitude: number,
-  latitude: number,
-  temperature: number,
-  humidity: number,
+  temperature?: number,
+  humidity?: number,
+  feels_like?: number,
+  weather_desc: Array<object>,
 }
 
 export default function Home() {
   
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [searchedCity, setSearchedCity] = useState('')
-  const [cards, setCards] = useState<any>([])
   const [cityData, setCityData] = useState<City>({
     name: '',
-    longitude: 0,
-    latitude: 0,
     temperature: 0,
-    humidity: 0
+    humidity: 0,
+    feels_like: 0,
+    weather_desc: []
   })
 
 
   function handleSearchClick (){
-    if(cards.length == 10){
-      cards.shift();
-    }
+    setIsLoading(true)
     if(searchedCity != ''){
-      setCards((prevCards:Array<string>)=> [...prevCards, searchedCity])
-      // GetWeatherData(searchedCity)
+      GetWeatherData(searchedCity)
     }
     if(searchedCity.length < 3){
       alert('Nome inválido ou não encontrado.')
@@ -40,27 +38,26 @@ export default function Home() {
   
   async function GetWeatherData (city:string){
     const geoApiURL:string = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=9db20493ccc761d551a7b7e55deaa7c2`;
-    
-    
     const fetchData = await fetch(geoApiURL)
-    const weatherData = await fetchData.json()
-      .then((data)=>{
-        setCityData({...cityData, name: searchedCity, latitude: data[0].lat, longitude: data[0].lon})
-        console.table(data)
-        console.table(cityData)
-      })
-      .then(() => fetchWeather(cityData))
+    const data = await fetchData.json()
 
-    async function fetchWeather(city:City){
+    async function fetchWeather([latitude, longitude]:Array<number>){
 
-      const weatherApiURL:string = `https://api.openweathermap.org/data/3.0/onecall?lat=${city.latitude}&lon=${city.longitude}&exclude=daily&units=metric&appid=9db20493ccc761d551a7b7e55deaa7c2`;
+      const weatherApiURL:string = `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=daily&units=metric&appid=9db20493ccc761d551a7b7e55deaa7c2`;
 
-      await fetch(weatherApiURL)
-      .then((response)=>response.json())
-      .then((response)=>{
-        setCityData({...cityData, temperature: response.current.temp, humidity: response.current.humidity})
+      const weatherData = await fetch(weatherApiURL)
+      const weather = await weatherData.json()
+      console.table(weather.current)
+      setCityData({
+        name: city,
+        temperature: weather.current.temp,
+        humidity: weather.current.humidity,
+        feels_like: weather.current.feels_like,
+        weather_desc: weather.current.weather
       })
     }
+    fetchWeather([data[0].lat, data[0].lon])
+    setIsLoading(false)
   }
 
   return (
@@ -81,11 +78,8 @@ export default function Home() {
           </button>
         </div>
       </div>
-      <section className='h-min w-screen gap-4 flex flex-wrap p-4 overflow-scroll no-scrollbar'>
-        {cards.map((searchedCity:string, index:number) => (
-          <Card key={index} index={index} city={searchedCity} cardState={{cards, setCards}} />
-        ))}
-      </section>
+      {isLoading && <LoadingSpinner/>}
+      {cityData.temperature != 0 && <Card city={cityData} />}
     </main>
   )
 }

@@ -1,23 +1,39 @@
-import { IoCloseSharp } from "react-icons/io5";
 
-export default function Card({props, city, index}:any) {
+export default function Card({city}:any) {
+    
+    /* async function getImage() {
+        const imageFetch = await fetch("https://places.googleapis.com/v1/Uberaba/media?key=AIzaSyCjoS7Tc2lCCPJg18IpWt9uhi8i9Z-YBjo&maxHeightPx=1200&skipHttpRedirect=true")
+        const imageResponse = await imageFetch.json()
 
-    function removeCard(){
-
+        return imageResponse
     }
 
+    const imageData = getImage() */
 
     return(
-        <div className='w-48 h-max bg-gradient-to-b from-slate-600 to-blue-900 p-2 rounded-md flex flex-col text-white shadow-md shadow-black hover:from-green-700 hover:to-green-900 text-elipsis overflow-hidden animate-colorPump'>
-            <aside className="absolute flex items-center justify-center font-semibold">{index + 1}</aside>
-            <button 
-            onClick={removeCard}
-            className="absolute right-0 -translate-x-2 h-max w-auto z-20">
-                <IoCloseSharp className="bg-white/30 hover:bg-red-600 text-sm rounded-full"/>
-            </button>
-            <h1 className='text-center text-3xl font-bold w-full drop-shadow-md text-ellipsis'>{city}</h1>
-            <section className='flex justify-between font-semibold drop-shadow-md'>Temperatura <p>00</p> </section>
-            <section className='flex justify-between font-semibold drop-shadow-md'>Umidade <p>00</p> </section>
+        <div className='w-[80%] min-h-[40rem] h-max bg-slate-800/90 flex text-white shadow-md  text-elipsis overflow-hidden'>
+            <section className="flex-1 flex flex-col p-4 gap-3 bg-blue-800/90">
+                <h1 className='text-center text-4xl font-bold italic w-full drop-shadow-md text-ellipsis'>
+                    {city.name}
+                </h1>
+                <div className="h-full bg-emerald-600 flex items-center justify-center">
+                    City Photo
+                </div>
+            </section>
+            <section className="flex flex-col items-center flex-1 p-4 gap-2 text-3xl">
+                <article className="text-4xl">
+                    {city.weather_desc[0].description}
+                </article>
+                <article className='flex w-full justify-between font-semibold drop-shadow-md'>
+                    Temperatura <p>{city.temperature}ºC</p>
+                </article>
+                <article className='flex w-full justify-between font-semibold drop-shadow-md'>
+                    Umidade <p>{city.humidity}%</p>
+                </article>
+                <article className='flex w-full justify-between font-semibold drop-shadow-md'>
+                    Sensação Térmica <p>{city.feels_like}%</p>
+                </article>
+            </section>
         </div>
     )
 }
