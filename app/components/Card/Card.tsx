@@ -1,8 +1,9 @@
 
 export default function Card({city}:any) {
-    
+    const GoogleAPIKey = process.env.GOOGLE_API_KEY
+
     /* async function getImage() {
-        const imageFetch = await fetch("https://places.googleapis.com/v1/Uberaba/media?key=AIzaSyCjoS7Tc2lCCPJg18IpWt9uhi8i9Z-YBjo&maxHeightPx=1200&skipHttpRedirect=true")
+        const imageFetch = await fetch(`https://places.googleapis.com/v1/Uberaba/media?key=&{GoogleAPIKey}&maxHeightPx=1200&skipHttpRedirect=true`)
         const imageResponse = await imageFetch.json()
 
         return imageResponse
