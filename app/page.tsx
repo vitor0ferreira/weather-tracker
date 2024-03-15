@@ -30,6 +30,7 @@ export default function Home() {
     setIsLoading(true)
     if(searchedCity != ''){
       GetWeatherData(searchedCity)
+      setSearchedCity('')
     }
     if(searchedCity.length < 3){
       alert('Nome inválido ou não encontrado.')
@@ -37,13 +38,14 @@ export default function Home() {
   }
   
   async function GetWeatherData (city:string){
-    const geoApiURL:string = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=9db20493ccc761d551a7b7e55deaa7c2`;
+    const GeoApi_ID = process.env.NEXT_PUBLIC_OPENWEATHER_APP_ID
+    const geoApiURL:string = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${GeoApi_ID}`;
     const fetchData = await fetch(geoApiURL)
     const data = await fetchData.json()
 
     async function fetchWeather([latitude, longitude]:Array<number>){
 
-      const weatherApiURL:string = `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=daily&units=metric&appid=9db20493ccc761d551a7b7e55deaa7c2`;
+      const weatherApiURL:string = `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=daily&units=metric&appid=${GeoApi_ID}&lang=pt_br`;
 
       const weatherData = await fetch(weatherApiURL)
       const weather = await weatherData.json()
@@ -62,7 +64,7 @@ export default function Home() {
 
   return (
     <main className='bg-weatherPixelArt h-screen min-h-min w-full bg-center bg-cover flex flex-col items-center justify-center gap-6'>
-      <div className='bg-slate-700 rounded-sm flex flex-col gap-2 p-2  shadow-sm shadow-black'>
+      <div className='bg-slate-700 rounded-md flex flex-col gap-2 p-2  shadow-sm shadow-black'>
         <p className="text-white font-semibold text-center" >Pesquise o nome da cidade</p>
         <div className="flex gap-2">
           <input
@@ -71,6 +73,7 @@ export default function Home() {
             required
             className='p-1 h-6 text-sm font-semibold focus:outline-none rounded-sm focus:placeholder:invisible'
             onChange={(e)=> setSearchedCity(e.target.value)}
+            value={searchedCity}
             id='searchInput'
           />
           <button onClick={handleSearchClick} className='text-white'>
